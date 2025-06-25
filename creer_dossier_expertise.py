@@ -385,7 +385,16 @@ def interface_graphique():
                 
                 if ouvrir_dossier:
                     # Ouvrir le dossier dans l'explorateur de fichiers
-                    os.startfile(nouveau_dossier) if os.name == 'nt' else os.system(f'xdg-open "{nouveau_dossier}"')
+                    if os.name == 'nt':  # Windows
+                        os.startfile(nouveau_dossier)
+                    elif os.name == 'posix':  # macOS ou Linux
+                        import subprocess
+                        # Pour macOS
+                        if os.path.exists('/usr/bin/open'):
+                            subprocess.call(['open', nouveau_dossier])
+                        # Pour Linux
+                        else:
+                            subprocess.call(['xdg-open', nouveau_dossier])
                 
                 # Réinitialiser les champs
                 entry_fichier_eml.delete(0, tk.END)
